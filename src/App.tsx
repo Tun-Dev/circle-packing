@@ -6,7 +6,7 @@ import Chart2 from "./components/chart2";
 function App() {
   return (
     <>
-      {/* <Chart1 /> */}
+      <Chart1 />
       <Chart2 />
     </>
   );
