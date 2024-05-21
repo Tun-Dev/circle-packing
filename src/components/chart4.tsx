@@ -13,14 +13,11 @@ interface Datum {
 function Chart4() {
   useEffect(() => {
     const width = window.innerWidth;
-    const height = width;
+    const height = window.innerHeight;
 
     // Color scale
-    const color = d3
-      .scaleLinear<number>()
-      .domain([0, 5])
-      .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
-      .interpolate(d3.interpolateHcl);
+    const color = d3.scaleLinear<number>().domain([0, 5]);
+    //   .range(["rgb(102, 204, 153)", "rgb(35, 45, 77)"]);
 
     // console.log(color);
 
@@ -28,14 +25,14 @@ function Chart4() {
       d3
         .pack<Datum>()
         .size([width, height])
-        .padding(3)(d3.hierarchy(data).sum((d) => d.value ?? 0))
+        .padding(10)(d3.hierarchy(data).sum((d) => d.value ?? 0))
         .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
     const root = pack(data2);
 
     const svg = d3
       .select("#demo")
-      .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
+      .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("width", width)
       .attr("height", height)
       .attr(
@@ -47,10 +44,12 @@ function Chart4() {
 
     const node = svg
       .append("g")
+      .attr("transform", `translate(${width / 2},${height / 2})`)
       .selectAll("circle")
       .data(root.descendants().slice(1))
       .join("circle")
-      .attr("fill", (d) => (d.children ? color(d.depth) : "white"))
+      .attr("fill", (d) => (d.children ? "red" : "white"))
+      .attr("filter", "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)")
       .attr("pointer-events", (d) => (!d.children ? "none" : null))
       .on("mouseover", function () {
         d3.select(this).attr("stroke", "#000");
@@ -65,6 +64,7 @@ function Chart4() {
 
     const label = svg
       .append("g")
+      .attr("transform", `translate(${width / 2},${height / 2})`)
       .style("font", "10px sans-serif")
       .attr("pointer-events", "none")
       .attr("text-anchor", "middle")
@@ -81,7 +81,9 @@ function Chart4() {
     zoomTo([focus.x, focus.y, focus.r * 2]);
 
     function zoomTo(v: any) {
-      const k = width / v[2];
+      const k = (Math.min(width, height) / v[2]) * 1;
+      console.log("k", k);
+      console.log("v", v[2]);
 
       view = v;
 
@@ -100,6 +102,9 @@ function Chart4() {
       const focus0 = focus;
 
       focus = d;
+
+      console.log("view", view);
+      console.log("focus", focus);
 
       const transition = svg
         .transition()
