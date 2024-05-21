@@ -42,7 +42,7 @@ const data: Datum[] = [
 function Chart3() {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    console.log(ref);
+    // console.log(ref);
     const width = ref?.current?.offsetWidth ?? 0;
     const height = ref?.current?.offsetHeight ?? 0;
 
