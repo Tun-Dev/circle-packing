@@ -20,6 +20,7 @@ let threshold: number;
 export default function Chart4() {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1); // State to manage zoom level
+  const [isDraggingEnabled, setIsDraggingEnabled] = useState(false);
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -39,11 +40,20 @@ export default function Chart4() {
 
     const root = pack(data2);
 
-    createCircularPacking(root, svgIcon, width, height, color, zoomLevel);
+    createCircularPacking(
+      root,
+      svgIcon,
+      width,
+      height,
+      color,
+      zoomLevel,
+      isDraggingEnabled
+    );
     return () => {
-      d3.select("#demo").selectAll("*").remove();
+      // d3.select("#demo").selectAll("*").remove();
+      svgIcon.selectAll("*").remove(); // Clear the SVG contents
     };
-  }, [zoomLevel]);
+  }, [zoomLevel, isDraggingEnabled]);
 
   const roundedZoomLevel = Math.round(zoomLevel * 10) / 10;
 
@@ -59,6 +69,14 @@ export default function Chart4() {
     }
   }
 
+  function toggleDragging() {
+    setIsDraggingEnabled((prev) => !prev);
+  }
+
+  // useEffect(() => {
+  //   console.log("isDraggingEnabled", isDraggingEnabled);
+  // }, [isDraggingEnabled]);
+
   return (
     <>
       <div>
@@ -66,8 +84,15 @@ export default function Chart4() {
       </div>
 
       <div className="btns">
-        <button onClick={increaseZoomLevel}>+</button>
-        <button onClick={decreaseZoomLevel}>-</button>
+        <div className="group1">
+          <button onClick={increaseZoomLevel}>+</button>
+          <button onClick={decreaseZoomLevel}>-</button>
+        </div>
+        <div className="group2">
+          <button className="dragBtn" onClick={toggleDragging}>
+            Drag
+          </button>
+        </div>
       </div>
     </>
   );
@@ -79,7 +104,8 @@ function createCircularPacking(
   width: number,
   height: number,
   color: d3.ScaleLinear<number, number, never>,
-  zoomLevel: number
+  zoomLevel: number,
+  isDraggingEnabled = false
 ) {
   const svg = svgIcon
     .attr("viewBox", `0 0 ${width} ${height}`)
@@ -89,14 +115,16 @@ function createCircularPacking(
       "style",
       `max-width: 100%; height: auto; display: block; margin: 0 0px; background: ${color(
         0
-      )}; border: 1px solid #000;`
+      )}; border: 1px solid #000; overflow: hidden;`
     );
 
-  const node = svg
+  const g = svg
     .append("g")
-    .attr("transform", `translate(${width / 2},${height / 2})`)
+    .attr("transform", `translate(${width / 2},${height / 2})`);
+
+  const node = g
     .selectAll("circle")
-    .data(root.descendants().slice(1))
+    .data(root.descendants())
     .join("circle")
     .attr("fill", (d) => (d.children ? "rgba(66, 84, 251, 0.19)" : "white"))
     .attr("filter", "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)")
@@ -106,112 +134,67 @@ function createCircularPacking(
     })
     .on("mouseout", function () {
       d3.select(this).attr("stroke", null);
-    })
-    .style("border", "1px solid red");
+    });
 
-  const label = svg
-    .append("g")
-    .attr("transform", `translate(${width / 2},${height / 2})`)
-    .style("font", "10px sans-serif")
-    .attr("pointer-events", "none")
-    .attr("text-anchor", "middle")
-    .selectAll("text")
-    .data(root.descendants())
-    .join("text")
-    .style("fill-opacity", (d) => (d.parent === root ? 1 : 0))
-    .style("display", (d) => (d.parent === root ? "inline" : "none"))
-    .text((d) => d.data.name ?? "");
+  // const label = svg
+  //   .append("g")
+  //   .attr("transform", `translate(${width / 2},${height / 2})`)
+  //   .style("font", "10px sans-serif")
+  //   .attr("pointer-events", "none")
+  //   .attr("text-anchor", "middle")
+  //   .selectAll("text")
+  //   .data(root.descendants())
+  //   .join("text")
+  //   .style("fill-opacity", (d) => (d.parent === root ? 1 : 0))
+  //   .style("display", (d) => (d.parent === root ? "inline" : "none"))
+  //   .text((d) => d.data.name ?? "");
 
   // svg.on("click", (event) => zoom(event, root));
+  console.log(root);
   let focus = root;
-  let view: any;
-  zoomTo([root.x, root.y, root.r * 2]);
+  // let view: any;
+  // zoomTo([root.x, root.y, root.r * 2]);
+  let view: any = [root.x, root.y, root.r * 2];
+  zoomTo(view);
   // console.log("threshold", threshold);
 
   function zoomTo(v: any) {
     const k = (Math.min(width, height) / v[2]) * zoomLevel;
-    // console.log("k", k);
-    // const roundedK = Math.round(k * 10) / 10; // Round to two decimal places
-    // console.log("roundedk", roundedK);
+    console.log(v);
+
     threshold = k;
     view = v;
+    // v = view;
 
-    label.attr(
-      "transform",
-      (d) => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`
-    );
+    // console.log("v", v[0], v[1], v[2]);
+
+    // label.attr(
+    //   "transform",
+    //   (d) => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`
+    // );
     node.attr(
       "transform",
       (d) => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`
     );
     node.attr("r", (d) => d.r * k);
-
-    // updateLabelVisibility();
   }
 
-  // function updateLabelVisibility() {
-  // label
-  //   .style("display", function (d) {
-  //     return threshold > 2 || d.parent === root ? "inline" : "none";
-  //   })
-  //   .transition()
-  //   .style("fill-opacity", function (d) {
-  //     if (d.parent === root && threshold <= 2) return 1;
-  //     if (d.parent !== root && threshold > 2) return 1;
-  //     return 0;
-  //   });
+  if (isDraggingEnabled && zoomLevel > 1) {
+    const drag = d3.drag<SVGElement, unknown>().on("drag", (event) => {
+      // console.log("dragging");
+      const dx = event.dx;
+      const dy = event.dy;
+      const currentTransform = g.attr("transform") || "translate(0,0)";
+      const translate = currentTransform.match(/translate\(([^)]+)\)/);
+      const [cx, cy] = translate ? translate[1].split(",").map(Number) : [0, 0];
+      g.attr("transform", `translate(${cx + dx},${cy + dy})`);
+      svg.attr("style", "cursor: grab;");
 
-  // label
-  //   .style("display", function (d) {
-  //     return threshold > 2 || d.parent === root ? "inline" : "none";
-  //   })
-  //   .transition()
-  //   .style("fill-opacity", function (d) {
-  //     return threshold > 2 || d.parent === root ? 1 : 0;
-  //   });
-  // }
-
-  // d3.selectAll(".btns button").on("click", updateLabelVisibility);
-
-  // function updateLabelVisibility() {
-  // label
-  //   .style("display", function (d) {
-  //     return threshold > 2 || d.parent === root ? "inline" : "none";
-  //   })
-  //   .transition()
-  //   .style("fill-opacity", function (d) {
-  //     return threshold > 2 || d.parent === root ? 1 : 0;
-  //   });
-  // label
-  //   .filter(function (d) {
-  //     return (
-  //       threshold > 2 || (this as SVGTextElement)?.style.display === "inline"
-  //     );
-  //   })
-  //   .transition()
-  //   .style("fill-opacity", function (d) {
-  //     return threshold > 2 || d.parent === focus ? 1 : 0;
-  //   })
-  //   .on("start", function () {
-  //     if (threshold > 2) (this as SVGTextElement).style.display = "inline";
-  //   })
-  //   .on("end", function () {
-  //     if (threshold > 2) (this as SVGTextElement).style.display = "none";
-  //   });
-  // }
-
-  // label
-  //   .filter(function () {
-  //     return (
-  //       threshold > 2 || (this as SVGTextElement)?.style.display === "inline"
-  //     );
-  //   })
-  //   .transition()
-  //   .style("fill-opacity", () => (threshold > 2 ? 1 : 0))
-  //   .on("start", function () {
-  //     if (threshold > 2) (this as SVGTextElement).style.display = "inline";
-  //   })
-  //   .on("end", function () {
-  //     if (threshold > 2) (this as SVGTextElement).style.display = "none";
-  //   });
+      view[0] -= dx;
+      view[1] -= dy;
+    });
+    svg.call(drag as any); // Add a type assertion to 'any' to bypass the type mismatch.
+  } else {
+    svg.on(".drag", null); // Disable drag if dragging is not enabled
+  }
 }

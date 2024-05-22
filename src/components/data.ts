@@ -449,7 +449,7 @@ export const data: Datum = {
 };
 
 export const data2: Datum = {
-  name: "EBS Analytics",
+  // name: "EBS Analytics",
   children: [
     {
       name: "datafy-api-gateway",
