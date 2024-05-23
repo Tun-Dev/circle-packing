@@ -454,25 +454,26 @@ export const data2: Datum = {
   children: [
     {
       name: "datafy-api-gateway",
+      value: 0,
       children: [
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EKS",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 20,
           type: "EKS",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 20,
           type: "EKS",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EKS",
         },
       ],
@@ -482,22 +483,22 @@ export const data2: Datum = {
       children: [
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 20,
           type: "EKS",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EKS",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EKS",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EKS",
         },
       ],
@@ -505,7 +506,7 @@ export const data2: Datum = {
 
     {
       name: "datafy-api-gateway",
-      value: 1,
+      value: 10,
       type: "EKS",
     },
 
@@ -514,12 +515,12 @@ export const data2: Datum = {
       children: [
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EC2",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 20,
           type: "EC2",
         },
       ],
@@ -527,7 +528,7 @@ export const data2: Datum = {
 
     {
       name: "datafy-api-gateway",
-      value: 1,
+      value: 10,
       type: "EC2",
     },
     {
@@ -535,37 +536,12 @@ export const data2: Datum = {
       children: [
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EC2",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
-          type: "EC2",
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-          type: "EC2",
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-          type: "EC2",
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-          type: "EC2",
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EC2",
         },
       ],
@@ -575,22 +551,22 @@ export const data2: Datum = {
       children: [
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EC2",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 20,
           type: "EC2",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EC2",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EC2",
         },
       ],
@@ -600,27 +576,52 @@ export const data2: Datum = {
       children: [
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
+          type: "EC2",
+        },
+        {
+          name: "datafy-api-gateway",
+          value: 10,
+          type: "EC2",
+        },
+        {
+          name: "datafy-api-gateway",
+          value: 10,
+          type: "EC2",
+        },
+        {
+          name: "datafy-api-gateway",
+          value: 10,
+          type: "EC2",
+        },
+      ],
+    },
+    {
+      name: "datafy-api-gateway",
+      children: [
+        {
+          name: "datafy-api-gateway",
+          value: 10,
           type: "EKS",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 20,
           type: "EKS",
         },
         {
           name: "datafy-api-gateway",
-          value: 1,
+          value: 10,
           type: "EKS",
         },
       ],
     },
-    { name: "datafy-api-gateway", value: 1, type: "EC2" },
-    { name: "datafy-api-gateway", value: 1, type: "EKS" },
-    { name: "datafy-api-gateway", value: 1, type: "EC2" },
-    { name: "datafy-api-gateway", value: 1, type: "EKS" },
-    { name: "datafy-api-gateway", value: 1, type: "EC2" },
-    { name: "datafy-api-gateway", value: 1, type: "EKS" },
+    { name: "datafy-api-gateway", value: 10, type: "EC2" },
+    { name: "datafy-api-gateway", value: 10, type: "EKS" },
+    { name: "datafy-api-gateway", value: 10, type: "EC2" },
+    { name: "datafy-api-gateway", value: 10, type: "EKS" },
+    { name: "datafy-api-gateway", value: 10, type: "EC2" },
+    { name: "datafy-api-gateway", value: 10, type: "EKS" },
     // {
     //   name: "datafy-api-gateway",
     //   children: [
