@@ -1,6 +1,7 @@
 interface Datum {
   name?: string;
   value?: number;
+  type?: string;
   children?: Datum[];
 }
 
@@ -457,18 +458,22 @@ export const data2: Datum = {
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
       ],
     },
@@ -478,18 +483,22 @@ export const data2: Datum = {
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
       ],
     },
@@ -497,6 +506,7 @@ export const data2: Datum = {
     {
       name: "datafy-api-gateway",
       value: 1,
+      type: "EKS",
     },
 
     {
@@ -505,10 +515,12 @@ export const data2: Datum = {
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
       ],
     },
@@ -516,6 +528,7 @@ export const data2: Datum = {
     {
       name: "datafy-api-gateway",
       value: 1,
+      type: "EC2",
     },
     {
       name: "datafy-api-gateway",
@@ -523,10 +536,12 @@ export const data2: Datum = {
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
       ],
     },
@@ -536,39 +551,22 @@ export const data2: Datum = {
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
+          type: "EC2",
         },
       ],
     },
@@ -578,37 +576,22 @@ export const data2: Datum = {
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EC2",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
-        },
-      ],
-    },
-    { name: "datafy-api-gateway", value: 1 },
-    { name: "datafy-api-gateway", value: 1 },
-    { name: "datafy-api-gateway", value: 1 },
-    { name: "datafy-api-gateway", value: 1 },
-    { name: "datafy-api-gateway", value: 1 },
-    { name: "datafy-api-gateway", value: 1 },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
+          type: "EC2",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
+          type: "EC2",
         },
       ],
     },
@@ -618,380 +601,423 @@ export const data2: Datum = {
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
+          type: "EKS",
         },
         {
           name: "datafy-api-gateway",
           value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
+          type: "EKS",
         },
       ],
     },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
-    {
-      name: "datafy-api-gateway",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-        {
-          name: "datafy-api-gateway",
-          value: 1,
-        },
-      ],
-    },
+    { name: "datafy-api-gateway", value: 1, type: "EC2" },
+    { name: "datafy-api-gateway", value: 1, type: "EKS" },
+    { name: "datafy-api-gateway", value: 1, type: "EC2" },
+    { name: "datafy-api-gateway", value: 1, type: "EKS" },
+    { name: "datafy-api-gateway", value: 1, type: "EC2" },
+    { name: "datafy-api-gateway", value: 1, type: "EKS" },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "datafy-api-gateway",
+    //   children: [
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //     {
+    //       name: "datafy-api-gateway",
+    //       value: 1,
+    //     },
+    //   ],
+    // },
   ],
 };
