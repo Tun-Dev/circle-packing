@@ -16,7 +16,7 @@ interface Datum {
 // Constants for zooming in and out
 // const ZOOM_FACTOR = 0.2; // Change this to adjust the zoom factor
 const MIN_ZOOM_LEVEL = 1;
-const MAX_ZOOM_LEVEL = 6;
+const MAX_ZOOM_LEVEL = 15;
 
 let threshold: number;
 
@@ -59,7 +59,7 @@ export default function Chart4() {
       d3
         .pack<Datum>()
         .size([width, height])
-        .padding(5)(d3.hierarchy(data).sum((d) => d.value ?? 0))
+        .padding(10)(d3.hierarchy(data).sum((d) => d.value ?? 0))
         .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
     const root = pack(hierarchy);
@@ -286,7 +286,9 @@ function createChildrenNodes(
       (d) => `translate(${d.x - view[0]},${d.y - view[1] + d.r * 0.15})`
     )
     .attr("dy", "0.3em")
-    .style("font", "8px sans-serif")
+    .style("font-family", "Arial, sans-serif")
+    .style("font-size", (d) => `${d.r * 0.2}px`)
+    // .style("font", "1px sans-serif")
     .style("text-anchor", "middle")
     .text((d) => d.data.data.name ?? "")
     .style("fill-opacity", 1);
@@ -302,7 +304,9 @@ function createChildrenNodes(
       (d) => `translate(${d.x - view[0]},${d.y - view[1] + d.r * -0.2})`
     )
     .attr("dy", "0.3em")
-    .style("font", "8px sans-serif")
+    .style("font-family", "Arial, sans-serif")
+    .style("font-size", (d) => `${d.r * 0.2}px`)
+    // .style("font", "1px sans-serif")
     .style("text-anchor", "middle")
     .text((d) => d.data.data.type ?? "")
     .style("fill-opacity", 1);
