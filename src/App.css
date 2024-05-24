@@ -54,3 +54,18 @@
 .dragBtn {
   font-size: 12px !important;
 }
+
+.floatform {
+  /* border: 1px solid red; */
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+}

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from "d3";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Children, useEffect, useMemo, useRef, useState } from "react";
 
 import { data2 } from "./data";
 
 interface Datum {
-  data: any;
+  data?: any;
   name?: string;
   value?: number;
   type?: string;
@@ -20,8 +20,24 @@ const MAX_ZOOM_LEVEL = 6;
 
 let threshold: number;
 
+const sizes = [10, 20];
+const names = ["EC2", "EKS"];
+
+function getRandomElement(array: any[]) {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  const randomElement = array[randomIndex];
+  return randomElement;
+}
+
 export default function Chart4() {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const [data, setData] = useState<Datum | null>({
+    name: "root",
+    children: [],
+  });
+  const [value, setValue] = useState(0);
+  const inputRef = useRef(null);
+  // const [isPanningEnabled, setIsPanningEnabled] = useState(false);
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -33,7 +49,7 @@ export default function Chart4() {
     const svgIcon = d3.select("#demo");
 
     const hierarchy = d3
-      .hierarchy(data2)
+      .hierarchy(data)
       .sum((d) => d.value!)
       .sort((a, b) => b.value! - a.value!);
 
@@ -50,7 +66,70 @@ export default function Chart4() {
     return () => {
       svgIcon.selectAll("*").remove(); // Clear the SVG contents
     };
-  }, []);
+  }, [data]);
+
+  const onClickSingle = () => {
+    const singleData = {
+      name: "datafy-api-gateway",
+      value: getRandomElement(sizes),
+      type: getRandomElement(names),
+    };
+
+    setData((prevData) => {
+      if (!prevData?.children) {
+        return {
+          ...prevData,
+          children: [singleData],
+        };
+      }
+      return {
+        ...prevData,
+        children: [...prevData.children, singleData],
+      };
+    });
+  };
+
+  const onClickGroup = () => {
+    const groupData = {
+      name: "datafy-api-gateway",
+      children: [] as Datum[],
+    };
+
+    for (let i = 0; i < value; i++) {
+      const singleData = {
+        name: "datafy-api-gateway",
+        value: getRandomElement(sizes),
+        type: getRandomElement(names),
+      };
+      groupData.children.push(singleData);
+    }
+
+    setData((prevData) => {
+      if (!prevData?.children) {
+        return {
+          ...prevData,
+          children: [groupData],
+        };
+      }
+      return {
+        ...prevData,
+        children: [...prevData.children, groupData],
+      };
+    });
+
+    setValue(0);
+    if (inputRef.current) {
+      (inputRef.current as HTMLInputElement).value = "";
+    }
+  };
+
+  const onReset = () => {
+    setValue(0);
+    setData({ name: "root", children: [] });
+    if (inputRef.current) {
+      (inputRef.current as HTMLInputElement).value = "";
+    }
+  };
 
   return (
     <>
@@ -68,10 +147,23 @@ export default function Chart4() {
           </button>
         </div>
         <div className="group2">
-          <button className="dragBtn" onClick={() => {}}>
+          {/* <button className="dragBtn" onClick={() => {}}>
             Drag
-          </button>
+          </button> */}
         </div>
+      </div>
+
+      <div className="floatform">
+        <button onClick={onClickSingle}>Add single data</button>
+        <div className="form">
+          <input
+            type="text"
+            onChange={(e) => setValue(Number(e.target.value))}
+            ref={inputRef}
+          />
+          <button onClick={onClickGroup}>Add Group</button>
+        </div>
+        <button onClick={onReset}>Reset</button>
       </div>
     </>
   );
@@ -83,6 +175,7 @@ function createCircularPacking(
   width: number,
   height: number,
   color: d3.ScaleLinear<number, number, never>
+  // isPanningEnabled: boolean
 ) {
   const view: any = [root.x, root.y, root.r * 2];
   // let threshold = 1;
@@ -104,17 +197,14 @@ function createCircularPacking(
     .attr("height", height)
     .attr(
       "style",
-      `display: flex; margin: 0; background: transparent; border: 3px solid yellow;`
+      `display: flex; margin: 0; background: transparent; border: 0px solid yellow;`
     )
     .call(zoom as any);
 
   const g = svg
     .append("g")
+    .attr("id", "zoomable")
     .attr("transform", `translate(${width / 2},${height / 2})`);
-
-  function handleZoom(e: any) {
-    g.attr("transform", e.transform);
-  }
 
   // Set the initial zoom transform to center the root
   svg.call(
@@ -133,7 +223,10 @@ function createCircularPacking(
   createParentNodes(root, g, view);
   createChildrenNodes(root, g, view);
 
-  // console.log(d3.zoomIdentity);
+  function handleZoom(e: any) {
+    g.attr("transform", e.transform);
+    updateChildrenNodes(root, g, e.transform);
+  }
 }
 
 function createChildrenNodes(
@@ -145,12 +238,11 @@ function createChildrenNodes(
 
   console.log("threshold", threshold);
 
-  // const threshold: number = transform;
-
   const childrenNodes = childrenGroup
     .selectAll("circle")
     .data(root.descendants().filter((d) => !d.children))
     .join("circle")
+    .attr("class", "child-node")
     .attr(
       "fill",
       threshold > 1.5 ? "rgba(66, 84, 251, 0.19)" : "rgba(66, 84, 251, 0)"
@@ -164,6 +256,7 @@ function createChildrenNodes(
     .selectAll("text")
     .data(root.descendants().filter((d) => !d.children))
     .join("text")
+    .attr("class", "child-label")
     .attr(
       "transform",
       (d) => `translate(${d.x - view[0]},${d.y - view[1] + d.r * 0.15})`
@@ -179,6 +272,7 @@ function createChildrenNodes(
     .selectAll("text")
     .data(root.descendants().filter((d) => !d.children))
     .join("text")
+    .attr("class", "child-type")
     .attr(
       "transform",
       (d) => `translate(${d.x - view[0]},${d.y - view[1] + d.r * -0.2})`
@@ -199,7 +293,12 @@ function createParentNodes(
 
   const parentNodes = parentsGroup
     .selectAll("circle")
-    .data(root.descendants().filter((d) => d.children))
+    .data(
+      root
+        .descendants()
+        .slice(1)
+        .filter((d) => d.children)
+    )
     .join("circle")
     .attr("fill", "rgba(66, 84, 251, 0.05)")
     .attr("filter", "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)")
@@ -221,4 +320,21 @@ function createParentNodes(
     .style("fill-opacity", 1)
     .style("fill", "blue")
     .text((d) => d.data.name ?? "");
+}
+
+function updateChildrenNodes(
+  root: d3.HierarchyCircularNode<Datum>,
+  g: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
+  view: any
+) {
+  console.log("view", view);
+  const childrenGroup = g.select(".children");
+
+  childrenGroup
+    .selectAll(".child-node")
+    .data(root.descendants().filter((d) => !d.children))
+    .attr(
+      "fill",
+      view.k > 1.5 ? "rgba(66, 84, 251, 0.19)" : "rgba(66, 84, 251, 0)"
+    );
 }
