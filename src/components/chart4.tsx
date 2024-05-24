@@ -35,8 +35,10 @@ export default function Chart4() {
     name: "root",
     children: [],
   });
-  const [value, setValue] = useState(0);
-  const inputRef = useRef(null);
+  const [items, setItems] = useState(0);
+  const [groups, setGroups] = useState(0);
+  const itemsRef = useRef<HTMLInputElement>(null);
+  const groupsRef = useRef<HTMLInputElement>(null);
   // const [isPanningEnabled, setIsPanningEnabled] = useState(false);
 
   useEffect(() => {
@@ -90,44 +92,55 @@ export default function Chart4() {
   };
 
   const onClickGroup = () => {
-    const groupData = {
-      name: "datafy-api-gateway",
-      children: [] as Datum[],
-    };
+    const newGroups: any[] = [];
 
-    for (let i = 0; i < value; i++) {
-      const singleData = {
+    for (let g = 0; g < groups; g++) {
+      const groupData = {
         name: "datafy-api-gateway",
-        value: getRandomElement(sizes),
-        type: getRandomElement(names),
+        children: [] as Datum[],
       };
-      groupData.children.push(singleData);
+
+      for (let i = 0; i < items; i++) {
+        const singleData = {
+          name: "datafy-api-gateway",
+          value: getRandomElement(sizes),
+          type: getRandomElement(names),
+        };
+        groupData.children.push(singleData);
+      }
+
+      newGroups.push(groupData);
     }
 
     setData((prevData) => {
       if (!prevData?.children) {
         return {
           ...prevData,
-          children: [groupData],
+          children: newGroups,
         };
       }
       return {
         ...prevData,
-        children: [...prevData.children, groupData],
+        children: [...prevData.children, ...newGroups],
       };
     });
 
-    setValue(0);
-    if (inputRef.current) {
-      (inputRef.current as HTMLInputElement).value = "";
+    setGroups(0);
+    setItems(0);
+    if (groupsRef.current) {
+      groupsRef.current.value = "";
+    }
+    if (itemsRef.current) {
+      itemsRef.current.value = "";
     }
   };
 
   const onReset = () => {
-    setValue(0);
+    setGroups(0);
+    setItems(0);
     setData({ name: "root", children: [] });
-    if (inputRef.current) {
-      (inputRef.current as HTMLInputElement).value = "";
+    if (itemsRef.current) {
+      (itemsRef.current as HTMLInputElement).value = "";
     }
   };
 
@@ -156,11 +169,22 @@ export default function Chart4() {
       <div className="floatform">
         <button onClick={onClickSingle}>Add single data</button>
         <div className="form">
-          <input
-            type="text"
-            onChange={(e) => setValue(Number(e.target.value))}
-            ref={inputRef}
-          />
+          <div className="form__left">
+            <label htmlFor="groups">Number of groups:</label>
+            <input
+              id="groups"
+              type="text"
+              onChange={(e) => setGroups(Number(e.target.value))}
+              ref={groupsRef}
+            />
+            <label htmlFor="items">Number of items:</label>
+            <input
+              id="items"
+              type="text"
+              onChange={(e) => setItems(Number(e.target.value))}
+              ref={itemsRef}
+            />
+          </div>
           <button onClick={onClickGroup}>Add Group</button>
         </div>
         <button onClick={onReset}>Reset</button>

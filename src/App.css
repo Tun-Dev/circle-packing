@@ -69,3 +69,14 @@
   display: flex;
   gap: 10px;
 }
+
+.form__left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form__left input {
+  outline: none;
+  padding-left: 2px;
+}
