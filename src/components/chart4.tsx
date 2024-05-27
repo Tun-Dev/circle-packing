@@ -33,7 +33,13 @@ export default function Chart4() {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [data, setData] = useState<Datum | null>({
     name: "root",
-    children: [],
+    children: [
+      {
+        name: "datafy-api-gateway",
+        value: 10,
+        type: getRandomElement(names),
+      },
+    ],
   });
   const [items, setItems] = useState(0);
   const [groups, setGroups] = useState(0);
@@ -52,8 +58,8 @@ export default function Chart4() {
 
     const hierarchy = d3
       .hierarchy(data)
-      .sum((d) => d.value!)
-      .sort((a, b) => b.value! - a.value!);
+      .sum((d) => d.value ?? 0)
+      .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
     const pack = (data: Datum) =>
       d3
@@ -138,7 +144,16 @@ export default function Chart4() {
   const onReset = () => {
     setGroups(0);
     setItems(0);
-    setData({ name: "root", children: [] });
+    setData({
+      name: "root",
+      children: [
+        {
+          name: "datafy-api-gateway",
+          value: 10,
+          type: getRandomElement(names),
+        },
+      ],
+    });
     if (itemsRef.current) {
       (itemsRef.current as HTMLInputElement).value = "";
     }
@@ -221,7 +236,7 @@ function createCircularPacking(
     .attr("height", height)
     .attr(
       "style",
-      `display: flex; margin: 0; background: transparent; border: 0px solid yellow;`
+      `display: flex; margin: 0; background: #F6F8FE; border: 0px solid yellow;`
     )
     .call(zoom as any);
 
@@ -271,10 +286,12 @@ function createChildrenNodes(
       "fill",
       threshold > 1.5 ? "rgba(66, 84, 251, 0.19)" : "rgba(66, 84, 251, 0)"
     )
-    .attr("filter", "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4)")
+    .attr("filter", "drop-shadow(0px 0px 0px 10px  rgb(0 0 0 / 1)")
     .attr("pointer-events", "none")
     .attr("r", (d) => d.r)
     .attr("transform", (d) => `translate(${d.x - view[0]},${d.y - view[1]})`);
+
+  addDropShadowFilter(childrenNodes, "drop-shadow");
 
   const childrenLabels = childrenGroup
     .selectAll("text")
@@ -286,13 +303,33 @@ function createChildrenNodes(
       (d) => `translate(${d.x - view[0]},${d.y - view[1] + d.r * 0.15})`
     )
     .attr("dy", "0.3em")
-    .style("font-family", "Arial, sans-serif")
+    .style("font-family", "sans-serif")
     .style("font-size", (d) => `${d.r * 0.2}px`)
-    // .style("font", "1px sans-serif")
+    .style("fill", "rgb(92,99,128)")
     .style("text-anchor", "middle")
     .text((d) => d.data.data.name ?? "")
     .style("fill-opacity", 1);
 
+  const childrenTypeBox = childrenGroup
+    .append("g")
+    .selectAll("rect")
+    .data(root.descendants().filter((d) => !d.children))
+    .join("rect")
+    .attr("class", "child-type-box")
+    .attr("rx", 2)
+    .attr("ry", 2)
+    .style("fill", (d) =>
+      d.data.data.type === "EC2"
+        ? "rgba(37, 207,119, 0.3)"
+        : "rgba(255,241,189,1)"
+    )
+    .style("fill-opacity", 1)
+    .attr(
+      "transform",
+      (d) => `translate(${d.x - view[0]},${d.y - view[1] + d.r * -0.2})`
+    );
+
+  // Add the text elements
   const childrenType = childrenGroup
     .append("g")
     .selectAll("text")
@@ -305,11 +342,24 @@ function createChildrenNodes(
     )
     .attr("dy", "0.3em")
     .style("font-family", "Arial, sans-serif")
-    .style("font-size", (d) => `${d.r * 0.2}px`)
-    // .style("font", "1px sans-serif")
+    .style("font-size", (d) => `${d.r * 0.15}px`)
+    .style("fill", (d) =>
+      d.data.data.type === "EC2" ? "rgba(24, 146,77, 1)" : "rgba(239,153,70,1)"
+    )
     .style("text-anchor", "middle")
     .text((d) => d.data.data.type ?? "")
     .style("fill-opacity", 1);
+
+  childrenType.each(function (d, i) {
+    const bbox = (this as SVGTextElement).getBBox();
+    d3.select(childrenTypeBox.nodes()[i])
+      .attr("x", bbox.x - 3) // Adjust x position for padding
+      .attr("y", bbox.y - 3) // Adjust y position for padding
+      .attr("width", bbox.width + 6) // Adjust width for padding
+      .attr("height", bbox.height + 6); // Adjust height for padding
+  });
+
+  childrenType.raise();
 }
 
 function createParentNodes(
@@ -355,7 +405,7 @@ function updateChildrenNodes(
   g: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
   view: any
 ) {
-  console.log("view", view);
+  // console.log("view", view);
   const childrenGroup = g.select(".children");
 
   childrenGroup
@@ -363,6 +413,37 @@ function updateChildrenNodes(
     .data(root.descendants().filter((d) => !d.children))
     .attr(
       "fill",
-      view.k > 1.5 ? "rgba(66, 84, 251, 0.19)" : "rgba(66, 84, 251, 0)"
-    );
+      view.k > 1.5 ? "rgba(255, 255, 255, 1)" : "rgba(66, 84, 251, 0)"
+    )
+    .attr("filter", view.k > 1.5 ? "url(#drop-shadow)" : "none");
+}
+
+function addDropShadowFilter(svg: any, filterId: string) {
+  const defs = svg.append("defs");
+
+  const filter = defs
+    .append("filter")
+    .attr("id", filterId)
+    .attr("width", "200%") // Increase the width of the filter region
+    .attr("height", "200%"); // Increase the height of the filter region
+
+  filter
+    .append("feGaussianBlur")
+    .attr("in", "SourceAlpha")
+    .attr("stdDeviation", 5); // Adjust the blur amount for a bigger shadow
+
+  filter
+    .append("feOffset")
+    .attr("dx", 0) // Horizontal offset of the shadow
+    .attr("dy", 0) // Vertical offset of the shadow
+    .attr("result", "offsetblur");
+
+  filter.append("feFlood").attr("flood-color", "rgba(0, 0, 0, 0.2)"); // Color and opacity of the shadow
+
+  filter.append("feComposite").attr("in2", "offsetblur").attr("operator", "in");
+
+  const feMerge = filter.append("feMerge");
+
+  feMerge.append("feMergeNode");
+  feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 }
