@@ -80,3 +80,6 @@
   outline: none;
   padding-left: 2px;
 }
+.form button {
+  flex: 1;
+}

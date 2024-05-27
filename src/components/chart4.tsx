@@ -16,7 +16,7 @@ interface Datum {
 // Constants for zooming in and out
 // const ZOOM_FACTOR = 0.2; // Change this to adjust the zoom factor
 const MIN_ZOOM_LEVEL = 1;
-const MAX_ZOOM_LEVEL = 15;
+const MAX_ZOOM_LEVEL = 30;
 
 let threshold: number;
 
@@ -37,6 +37,7 @@ export default function Chart4() {
   });
   const [items, setItems] = useState(0);
   const [groups, setGroups] = useState(0);
+  const [singleData, setSingleData] = useState(0);
   const itemsRef = useRef<HTMLInputElement>(null);
   const groupsRef = useRef<HTMLInputElement>(null);
   // const [isPanningEnabled, setIsPanningEnabled] = useState(false);
@@ -55,6 +56,9 @@ export default function Chart4() {
       .sum((d) => d?.value ?? 0)
       .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
+    const totalChildrenCount = getTotalChildrenCount(hierarchy);
+    console.log(totalChildrenCount); // Output the total number of children
+
     const pack = (data: Datum) =>
       d3
         .pack<Datum>()
@@ -71,22 +75,28 @@ export default function Chart4() {
   }, [data]);
 
   const onClickSingle = () => {
-    const singleData = {
-      name: "datafy-api-gateway",
-      value: getRandomElement(sizes),
-      type: getRandomElement(names),
-    };
+    const newGroups: any[] = [];
+
+    for (let i = 0; i < singleData; i++) {
+      const singleData = {
+        name: "datafy-api-gateway",
+        value: getRandomElement(sizes),
+        type: getRandomElement(names),
+      };
+
+      newGroups.push(singleData);
+    }
 
     setData((prevData) => {
       if (!prevData?.children) {
         return {
           ...prevData,
-          children: [singleData],
+          children: newGroups,
         };
       }
       return {
         ...prevData,
-        children: [...prevData.children, singleData],
+        children: [...prevData.children, ...newGroups],
       };
     });
   };
@@ -170,7 +180,19 @@ export default function Chart4() {
       </div>
 
       <div className="floatform">
-        <button onClick={onClickSingle}>Add single data</button>
+        <div className="form">
+          <div className="form__left">
+            <label htmlFor="single">Number of single data:</label>
+            <input
+              id="single"
+              type="text"
+              onChange={(e) => setSingleData(Number(e.target.value))}
+            />
+          </div>
+          <button id="single" onClick={onClickSingle}>
+            Add single data
+          </button>
+        </div>
         <div className="form">
           <div className="form__left">
             <label htmlFor="groups">Number of groups:</label>
@@ -263,7 +285,7 @@ function createChildrenNodes(
 ) {
   const childrenGroup = g.append("g").attr("class", "children");
 
-  console.log("threshold", threshold);
+  // console.log("threshold", threshold);
 
   const childrenNodes = childrenGroup
     .selectAll("circle")
@@ -304,8 +326,8 @@ function createChildrenNodes(
     .data(root.descendants().filter((d) => !d.children))
     .join("rect")
     .attr("class", "child-type-box")
-    .attr("rx", 2)
-    .attr("ry", 2)
+    // .attr("rx", 2)
+    // .attr("ry", 2)
     .style("fill", (d) =>
       d.data.data.type === "EC2"
         ? "rgba(37, 207,119, 0.3)"
@@ -341,15 +363,15 @@ function createChildrenNodes(
     .style("fill-opacity", 1);
 
   childrenType.each(function (d, i) {
+    // console.log(d.r / 2);
     const bbox = (this as SVGTextElement).getBBox();
+    // console.log("bbox", bbox);
     d3.select(childrenTypeBox.nodes()[i])
-      .attr("x", bbox.x - 3) // Adjust x position for padding
-      .attr("y", bbox.y - 3) // Adjust y position for padding
-      .attr("width", bbox.width + 6) // Adjust width for padding
-      .attr("height", bbox.height + 6); // Adjust height for padding
+      .attr("x", bbox.x - d.r * 0.06) // Adjust x position for padding
+      .attr("y", bbox.y - d.r * 0.05) // Adjust y position for padding
+      .attr("width", bbox.width + d.r * 0.1) // Adjust width for padding
+      .attr("height", bbox.height + d.r * 0.1); // Adjust height for padding
   });
-
-  childrenType.raise();
 }
 
 function createParentNodes(
@@ -414,13 +436,15 @@ function addDropShadowFilter(svg: any, filterId: string) {
   const filter = defs
     .append("filter")
     .attr("id", filterId)
+    .attr("x", "-50%") // Adjust the x position
+    .attr("y", "-50%") // Adjust the y position
     .attr("width", "200%") // Increase the width of the filter region
     .attr("height", "200%"); // Increase the height of the filter region
 
   filter
     .append("feGaussianBlur")
     .attr("in", "SourceAlpha")
-    .attr("stdDeviation", 5); // Adjust the blur amount for a bigger shadow
+    .attr("stdDeviation", 3); // Adjust the blur amount for a bigger shadow
 
   filter
     .append("feOffset")
@@ -436,4 +460,18 @@ function addDropShadowFilter(svg: any, filterId: string) {
 
   feMerge.append("feMergeNode");
   feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+}
+
+function getTotalChildrenCount(node: any) {
+  let count = 0;
+
+  function countChildren(n: any) {
+    if (n.children) {
+      count += n.children.length;
+      n.children.forEach(countChildren);
+    }
+  }
+
+  countChildren(node);
+  return count;
 }
