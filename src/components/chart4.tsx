@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from "d3";
-import { Children, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { data2 } from "./data";
+// import { data2 } from "./data";
 
 interface Datum {
   data?: any;
@@ -33,13 +33,7 @@ export default function Chart4() {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [data, setData] = useState<Datum | null>({
     name: "root",
-    children: [
-      {
-        name: "datafy-api-gateway",
-        value: 10,
-        type: getRandomElement(names),
-      },
-    ],
+    children: [],
   });
   const [items, setItems] = useState(0);
   const [groups, setGroups] = useState(0);
@@ -146,13 +140,7 @@ export default function Chart4() {
     setItems(0);
     setData({
       name: "root",
-      children: [
-        {
-          name: "datafy-api-gateway",
-          value: 10,
-          type: getRandomElement(names),
-        },
-      ],
+      children: [],
     });
     if (itemsRef.current) {
       (itemsRef.current as HTMLInputElement).value = "";
@@ -321,7 +309,9 @@ function createChildrenNodes(
     .style("fill", (d) =>
       d.data.data.type === "EC2"
         ? "rgba(37, 207,119, 0.3)"
-        : "rgba(255,241,189,1)"
+        : d.data.data.type === "EKS"
+        ? "rgba(255,241,189,1)"
+        : "none"
     )
     .style("fill-opacity", 1)
     .attr(
