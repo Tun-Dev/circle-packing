@@ -45,14 +45,14 @@ export default function Chart4() {
     const width = window.innerWidth;
     const height = window.innerHeight;
     // Color scale
-    const color = d3.scaleLinear<number>().domain([0, 5]);
+    // const color = d3.scaleLinear<number>().domain([0, 5]);
 
     // const svgIcon = d3.select(svgRef.current);
     const svgIcon = d3.select("#demo");
 
     const hierarchy = d3
       .hierarchy(data)
-      .sum((d) => d.value ?? 0)
+      .sum((d) => d?.value ?? 0)
       .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
     const pack = (data: Datum) =>
@@ -64,7 +64,7 @@ export default function Chart4() {
 
     const root = pack(hierarchy);
 
-    createCircularPacking(root, svgIcon, width, height, color);
+    createCircularPacking(root, svgIcon, width, height);
     return () => {
       svgIcon.selectAll("*").remove(); // Clear the SVG contents
     };
@@ -200,8 +200,8 @@ function createCircularPacking(
   root: d3.HierarchyCircularNode<Datum>, // Add the type argument 'Datum'
   svgIcon: d3.Selection<d3.BaseType, unknown, HTMLElement, any>,
   width: number,
-  height: number,
-  color: d3.ScaleLinear<number, number, never>
+  height: number
+  // color: d3.ScaleLinear<number, number, never>
   // isPanningEnabled: boolean
 ) {
   const view: any = [root.x, root.y, root.r * 2];
