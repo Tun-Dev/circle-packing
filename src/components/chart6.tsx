@@ -3,7 +3,7 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 
-import { data2 } from "./data";
+// import { data2 } from "./data";
 
 interface Datum {
   data?: any;
@@ -50,12 +50,6 @@ export default function Chart6() {
     const width = window.innerWidth - 6;
     const height = window.innerHeight - 6;
 
-    //The grey colors of the circles depend on the depth
-    const colorCircle = d3
-      .scaleOrdinal<string>() // Specify the type of the scale
-      .domain(["0", "1", "2", "3"]) // Convert the array of numbers to an array of strings
-      .range(["#bfbfbf", "#838383", "#4c4c4c", "#1c1c1c"]);
-
     const hierarchy = d3
       .hierarchy(data)
       .sum((d) => d?.value ?? 0)
@@ -65,12 +59,12 @@ export default function Chart6() {
       d3
         .pack<Datum>()
         .size([width, height])
-        .padding(10)(d3.hierarchy(data).sum((d) => d.value ?? 0))
+        .padding(8)(d3.hierarchy(data).sum((d) => d.value ?? 0))
         .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
     const root = pack(hierarchy);
 
-    createCircularPacking(root, width, height, colorCircle);
+    createCircularPacking(root, width, height);
   }, [data]);
 
   const onClickSingle = () => {
@@ -219,8 +213,7 @@ export default function Chart6() {
 function createCircularPacking(
   root: d3.HierarchyCircularNode<Datum>,
   width: number,
-  height: number,
-  colorCircle: d3.ScaleOrdinal<string, string>
+  height: number
 ) {
   const canvas = d3
     .select("#chart")
@@ -293,12 +286,24 @@ function createChildrenNodes(
       const y = transform.applyY(node.y);
       const r = transform.k * node.r;
 
+      // Set the shadow properties
+      context.shadowColor = "rgba(0, 0, 0, 0.5)"; // color of the shadow
+      context.shadowBlur = 10; // blur radius of the shadow
+      context.shadowOffsetX = 0; // horizontal offset of the shadow
+      context.shadowOffsetY = 0; // vertical offset of the shadow
+
       context.fillStyle =
         transform.k > 2.5 ? "rgba(255, 255, 255, 1)" : "rgba(66, 84, 251, 0)";
       context.beginPath();
       context.arc(x, y, r, 0, 2 * Math.PI, true);
       context.fill();
       context.closePath();
+
+      // Reset the shadow properties after drawing
+      context.shadowColor = "rgba(0, 0, 0, 0)";
+      context.shadowBlur = 0;
+      context.shadowOffsetX = 0;
+      context.shadowOffsetY = 0;
     });
 
     // for children label
@@ -334,14 +339,32 @@ function createChildrenNodes(
       const x = transform.applyX(node.x);
       const y = transform.applyY(node.y);
       const r = transform.k * node.r;
+      const fontSize = r * 0.2;
+
+      context.font = `${fontSize}px sans-serif`;
+
+      // Measure text size
+      const textWidth = context.measureText(node.data.data?.type ?? "").width;
+
+      // Calculate box dimensions
+      const boxWidth = textWidth + fontSize * 0.5; // Add padding
+      const boxHeight = fontSize * 1.5; // Adjust as needed
 
       context.fillStyle =
         node.data.data.type === "EC2"
           ? "rgba(37, 207,119, 0.3)"
           : node.data.data.type === "EKS"
-          ? "rgba(255,241,189, 0.4)"
+          ? "rgba(255,241,189, 0.5)"
           : "none";
-      context.fillRect(x - r / 2, y + r * -0.4, r, r * 0.4);
+      context.beginPath();
+      context.roundRect(
+        x - boxWidth / 2,
+        y + r * -0.36,
+        boxWidth,
+        boxHeight,
+        10
+      );
+      context.fill();
     });
   }
 }
