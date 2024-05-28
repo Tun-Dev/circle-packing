@@ -83,3 +83,15 @@
 .form button {
   flex: 1;
 }
+
+canvas {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+#chart {
+  border: 1px solid blue;
+  overflow: hidden;
+  background: #f6f8fe;
+}
