@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-
-// import { data2 } from "./data";
 
 interface Datum {
   data?: any;
@@ -21,8 +18,7 @@ const names = ["EC2", "EKS"];
 
 function getRandomElement(array: any[]) {
   const randomIndex = Math.floor(Math.random() * array.length);
-  const randomElement = array[randomIndex];
-  return randomElement;
+  return array[randomIndex];
 }
 
 export default function Chart6() {
@@ -63,32 +59,24 @@ export default function Chart6() {
     createCircularPacking(root, width, height);
   }, [data]);
 
-  const onClickSingle = () => {
-    const newGroups: any[] = [];
+  const addData = (newGroups: any[]) => {
+    setData((prevData) => {
+      if (!prevData?.children) {
+        return { ...prevData, children: newGroups };
+      }
+      return { ...prevData, children: [...prevData.children, ...newGroups] };
+    });
+  };
 
-    for (let i = 0; i < singleData; i++) {
-      const singleData = {
+  const onClickSingle = () => {
+    const newGroups: any[] = Array(singleData)
+      .fill(null)
+      .map(() => ({
         name: "datafy-api-gateway",
         value: getRandomElement(sizes),
         type: getRandomElement(names),
-      };
-
-      newGroups.push(singleData);
-    }
-
-    setData((prevData) => {
-      if (!prevData?.children) {
-        return {
-          ...prevData,
-          children: newGroups,
-        };
-      }
-      return {
-        ...prevData,
-        children: [...prevData.children, ...newGroups],
-      };
-    });
-
+      }));
+    addData(newGroups);
     setSingleData(0);
     if (singleRef.current) {
       singleRef.current.value = "";
@@ -96,39 +84,19 @@ export default function Chart6() {
   };
 
   const onClickGroup = () => {
-    const newGroups: any[] = [];
-
-    for (let g = 0; g < groups; g++) {
-      const groupData = {
+    const newGroups: any[] = Array(groups)
+      .fill(null)
+      .map(() => ({
         name: "datafy-api-gateway",
-        children: [] as Datum[],
-      };
-
-      for (let i = 0; i < items; i++) {
-        const singleData = {
-          name: "datafy-api-gateway",
-          value: getRandomElement(sizes),
-          type: getRandomElement(names),
-        };
-        groupData.children.push(singleData);
-      }
-
-      newGroups.push(groupData);
-    }
-
-    setData((prevData) => {
-      if (!prevData?.children) {
-        return {
-          ...prevData,
-          children: newGroups,
-        };
-      }
-      return {
-        ...prevData,
-        children: [...prevData.children, ...newGroups],
-      };
-    });
-
+        children: Array(items)
+          .fill(null)
+          .map(() => ({
+            name: "datafy-api-gateway",
+            value: getRandomElement(sizes),
+            type: getRandomElement(names),
+          })),
+      }));
+    addData(newGroups);
     setGroups(0);
     setItems(0);
     if (groupsRef.current) {
@@ -158,12 +126,8 @@ export default function Chart6() {
 
       <div className="btns">
         <div className="group1">
-          <button id="increaseBtn" onClick={() => {}}>
-            +
-          </button>
-          <button id="decreaseBtn" onClick={() => {}}>
-            -
-          </button>
+          <button id="increaseBtn">+</button>
+          <button id="decreaseBtn">-</button>
         </div>
       </div>
 
@@ -224,16 +188,6 @@ function createCircularPacking(
   const childrenNodes = root.descendants().filter((d) => !d.children);
   const parentNodes = root.descendants().filter((d) => d.children);
 
-  // let previousHoveredNode: d3.HierarchyCircularNode<Datum> | null = null;
-  // let currentHoveredNode: d3.HierarchyCircularNode<Datum> | null = null;
-
-  // Find the largest parent node
-  const largestParentNode = parentNodes.reduce((max, node) => {
-    return node.r > max.r ? node : max;
-  }, parentNodes[0]);
-
-  //   console.log("largestParentNode", largestParentNode);
-
   function draw(
     transform: any,
     hoveredNode: d3.HierarchyCircularNode<Datum> | null = null
@@ -247,6 +201,10 @@ function createCircularPacking(
 
   draw(d3.zoomIdentity);
 
+  // Find the largest parent node
+  const largestParentNode = parentNodes.reduce((max, node) => {
+    return node.r > max.r ? node : max;
+  }, parentNodes[0]);
   //   largest radius check
   const largestRadius = largestParentNode?.r ? largestParentNode?.r : 1;
 
@@ -255,8 +213,8 @@ function createCircularPacking(
     .zoom()
     .scaleExtent([MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL])
     .translateExtent([
-      [-width + largestRadius / 2 + width, -height + height], // Minimum translation (top-left corner)
-      [width - largestRadius / 2, height], // Maximum translation (bottom-right corner)
+      [-width + largestRadius + width, -height + height], // Minimum translation (top-left corner)
+      [width - largestRadius, height], // Maximum translation (bottom-right corner)
     ])
     .on("zoom", (e) => {
       const transform = e.transform;
@@ -273,10 +231,9 @@ function createCircularPacking(
     canvas.transition().call(zoom_function.scaleBy as any, 0.7);
   });
 
-  canvas.call(zoom_function as any);
+  canvas.call(zoom_function as any).on("wheel.zoom", null);
 
-  // Hover effect
-  canvas.on("mousemove", function (event) {
+  const handleMouseEvent = (event: any, checkClick = false) => {
     const [mouseX, mouseY] = d3.pointer(event);
     const transform = d3.zoomTransform(canvas.node() as any);
     let hoveredNode: d3.HierarchyCircularNode<Datum> | null = null;
@@ -293,38 +250,21 @@ function createCircularPacking(
       }
     }
 
-    draw(transform, hoveredNode);
-
-    if (hoveredNode) {
-      canvas.style("cursor", "pointer");
+    // Check for click event
+    if (checkClick && hoveredNode) {
+      console.log("Clicked on circle:", hoveredNode.data.data.type);
+      window.alert(
+        `Clicked on circle: ${hoveredNode.data.data.type}, name: ${hoveredNode.data.data.name}, value: ${hoveredNode.data.data.value}`
+      );
     } else {
-      canvas.style("cursor", "default");
+      // Hover event
+      draw(transform, hoveredNode);
+      canvas.style("cursor", hoveredNode ? "pointer" : "default");
     }
-  });
+  };
 
-  // click event
-  canvas.on("click", function (event) {
-    const mouseX = event.offsetX;
-    const mouseY = event.offsetY;
-    const transform = d3.zoomTransform(canvas.node() as any);
-
-    // Iterate through the nodes and check if the click is inside any circle
-    childrenNodes.forEach((node) => {
-      const x = transform.applyX(node.x);
-      const y = transform.applyY(node.y);
-      const r = transform.k * node.r;
-
-      // Check if the click is inside the circle
-      if (Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2) <= Math.pow(r, 2)) {
-        // Execute the desired action when the circle is clicked
-        console.log("Clicked on circle:", node.data.data.type);
-        window.alert(
-          `Clicked on circle: ${node.data.data.type}, name: ${node.data.data.name}, value: ${node.data.data.value}`
-        );
-        // Example action: Redirect to a different page, display information about the circle, etc.
-      }
-    });
-  });
+  canvas.on("mousemove", (event) => handleMouseEvent(event));
+  canvas.on("click", (event) => handleMouseEvent(event, true));
 }
 
 function createChildrenNodes(
@@ -334,24 +274,21 @@ function createChildrenNodes(
   hoveredNode: d3.HierarchyCircularNode<Datum> | null
 ) {
   if (context) {
-    // for children circles
     nodes.forEach((node) => {
-      //   console.log("node", node);
       const x = transform.applyX(node.x);
       const y = transform.applyY(node.y);
       const r = transform.k * node.r;
 
       // Set the shadow properties
-      if (hoveredNode && node === hoveredNode) {
-        context.shadowColor = "rgba(194, 221, 254, 0.8)";
-      } else {
-        context.shadowColor = "rgba(0, 0, 0, 0.5)";
-      }
-      // context.shadowColor = "rgba(0, 0, 0, 0.5)"; // color of the shadow
+      context.shadowColor =
+        hoveredNode && node === hoveredNode
+          ? "rgba(194, 221, 254, 0.8)"
+          : "rgba(0, 0, 0, 0.5)";
       context.shadowBlur = 10; // blur radius of the shadow
       context.shadowOffsetX = 0; // horizontal offset of the shadow
       context.shadowOffsetY = 0; // vertical offset of the shadow
 
+      // for children circles
       context.fillStyle =
         transform.k > 2.5 ? "rgba(255, 255, 255, 1)" : "rgba(66, 84, 251, 0)";
       context.beginPath();
@@ -364,52 +301,28 @@ function createChildrenNodes(
       context.shadowBlur = 0;
       context.shadowOffsetX = 0;
       context.shadowOffsetY = 0;
-    });
 
-    // for children label
-    nodes.forEach((node) => {
-      const x = transform.applyX(node.x);
-      const y = transform.applyY(node.y);
-      const r = transform.k * node.r;
-
+      // for children label
       context.textAlign = "center";
       context.textBaseline = "middle";
       context.fillStyle = "rgb(92,99,128)";
-      context.font = `${r * 0.2}px sans-serif`; // Adjust font size based on circle radius
+      context.font = `${r * 0.2}px sans-serif`;
       context.fillText(node.data.data?.name ?? "", x, y + r * 0.15);
-    });
 
-    // for children type
-    nodes.forEach((node) => {
-      const x = transform.applyX(node.x);
-      const y = transform.applyY(node.y);
-      const r = transform.k * node.r;
-      context.textAlign = "center";
-      context.textBaseline = "middle";
+      // for children type
       context.fillStyle =
         node.data.data?.type === "EC2"
           ? "rgba(24, 146,77, 1)"
           : "rgba(239,153,70,1)";
-      context.font = `${r * 0.2}px sans-serif`; // Adjust font size based on circle radius
+      context.font = `${r * 0.2}px sans-serif`;
       context.fillText(node.data.data?.type ?? "", x, y + r * -0.2);
-    });
 
-    // for children type box
-    nodes.forEach((node) => {
-      const x = transform.applyX(node.x);
-      const y = transform.applyY(node.y);
-      const r = transform.k * node.r;
+      // for children type box
       const fontSize = r * 0.2;
-
       context.font = `${fontSize}px sans-serif`;
-
-      // Measure text size
       const textWidth = context.measureText(node.data.data?.type ?? "").width;
-
-      // Calculate box dimensions
       const boxWidth = textWidth + fontSize * 0.5; // Add padding
       const boxHeight = fontSize * 1.5; // Adjust as needed
-
       context.fillStyle =
         node.data.data.type === "EC2"
           ? "rgba(37, 207,119, 0.3)"
@@ -422,7 +335,7 @@ function createChildrenNodes(
         y + r * -0.36,
         boxWidth,
         boxHeight,
-        10
+        1 + r * 0.05
       );
       context.fill();
     });
@@ -448,8 +361,3 @@ function createParentNodes(
     }
   });
 }
-
-// Hover effect
-function hoverEffect(
-  canvas: d3.Selection<HTMLCanvasElement, unknown, HTMLElement, any>
-) {}
