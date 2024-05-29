@@ -1,0 +1,31 @@
+{
+  "recommendations": [
+    "charliermarsh.ruff",
+    "christian-kohler.path-intellisense",
+    "codezombiech.gitignore",
+    "eamodio.gitlens",
+    "emeraldwalk.RunOnSave",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "naumovs.color-highlight",
+    "redhat.vscode-yaml",
+    "streetsidesoftware.code-spell-checker",
+    "tamasfe.even-better-toml",
+    "zeshuaro.vscode-python-poetry",
+    "bradlc.vscode-tailwindcss",
+    "ChFlick.firecode",
+    "csstools.postcss",
+    "dbaeumer.vscode-eslint",
+    "dsznajder.es7-react-js-snippets",
+    "esbenp.prettier-vscode",
+    "firsttris.vscode-jest-runner",
+    "formulahendry.auto-rename-tag",
+    "ionutvmi.path-autocomplete",
+    "jock.svg",
+    "planbcoding.vscode-react-refactor",
+    "vincaslt.highlight-matching-tag",
+    "VisualStudioExptTeam.intellicode-api-usage-examples",
+    "mongodb.mongodb-vscode",
+    "stivo.tailwind-fold"
+  ]
+}
