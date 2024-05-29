@@ -28,19 +28,15 @@ function getRandomElement(array: any[]) {
 export default function Chart6() {
   const [data, setData] = useState<Datum | null>({
     name: "root",
-    children: [
-      //   {
-      //     name: "datafy-api-gateway",
-      //     value: getRandomElement(sizes),
-      //     type: getRandomElement(names),
-      //   },
-    ],
+    children: [],
   });
   const [items, setItems] = useState(0);
   const [groups, setGroups] = useState(0);
   const [singleData, setSingleData] = useState(0);
   const itemsRef = useRef<HTMLInputElement>(null);
   const groupsRef = useRef<HTMLInputElement>(null);
+  const singleRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const chartElement = document.getElementById("chart");
     if (!chartElement) return;
@@ -92,6 +88,11 @@ export default function Chart6() {
         children: [...prevData.children, ...newGroups],
       };
     });
+
+    setSingleData(0);
+    if (singleRef.current) {
+      singleRef.current.value = "";
+    }
   };
 
   const onClickGroup = () => {
@@ -141,15 +142,10 @@ export default function Chart6() {
   const onReset = () => {
     setGroups(0);
     setItems(0);
+    setSingleData(0);
     setData({
       name: "root",
-      children: [
-        // {
-        //   name: "datafy-api-gateway",
-        //   value: getRandomElement(sizes),
-        //   type: getRandomElement(names),
-        // },
-      ],
+      children: [],
     });
     if (itemsRef.current) {
       (itemsRef.current as HTMLInputElement).value = "";
@@ -179,6 +175,7 @@ export default function Chart6() {
               id="single"
               type="text"
               onChange={(e) => setSingleData(Number(e.target.value))}
+              ref={singleRef}
             />
           </div>
           <button id="single" onClick={onClickSingle}>
@@ -227,6 +224,9 @@ function createCircularPacking(
   const childrenNodes = root.descendants().filter((d) => !d.children);
   const parentNodes = root.descendants().filter((d) => d.children);
 
+  // let previousHoveredNode: d3.HierarchyCircularNode<Datum> | null = null;
+  // let currentHoveredNode: d3.HierarchyCircularNode<Datum> | null = null;
+
   // Find the largest parent node
   const largestParentNode = parentNodes.reduce((max, node) => {
     return node.r > max.r ? node : max;
@@ -234,11 +234,14 @@ function createCircularPacking(
 
   //   console.log("largestParentNode", largestParentNode);
 
-  function draw(transform: any) {
+  function draw(
+    transform: any,
+    hoveredNode: d3.HierarchyCircularNode<Datum> | null = null
+  ) {
     context?.save();
     context?.clearRect(0, 0, width, height);
     createParentNodes(transform, parentNodes, context);
-    createChildrenNodes(transform, childrenNodes, context);
+    createChildrenNodes(transform, childrenNodes, context, hoveredNode);
     context?.restore();
   }
 
@@ -271,12 +274,64 @@ function createCircularPacking(
   });
 
   canvas.call(zoom_function as any);
+
+  // Hover effect
+  canvas.on("mousemove", function (event) {
+    const [mouseX, mouseY] = d3.pointer(event);
+    const transform = d3.zoomTransform(canvas.node() as any);
+    let hoveredNode: d3.HierarchyCircularNode<Datum> | null = null;
+
+    for (const node of childrenNodes) {
+      const x = transform.applyX(node.x);
+      const y = transform.applyY(node.y);
+      const r = transform.k * node.r;
+      const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
+
+      if (distance < r) {
+        hoveredNode = node;
+        break;
+      }
+    }
+
+    draw(transform, hoveredNode);
+
+    if (hoveredNode) {
+      canvas.style("cursor", "pointer");
+    } else {
+      canvas.style("cursor", "default");
+    }
+  });
+
+  // click event
+  canvas.on("click", function (event) {
+    const mouseX = event.offsetX;
+    const mouseY = event.offsetY;
+    const transform = d3.zoomTransform(canvas.node() as any);
+
+    // Iterate through the nodes and check if the click is inside any circle
+    childrenNodes.forEach((node) => {
+      const x = transform.applyX(node.x);
+      const y = transform.applyY(node.y);
+      const r = transform.k * node.r;
+
+      // Check if the click is inside the circle
+      if (Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2) <= Math.pow(r, 2)) {
+        // Execute the desired action when the circle is clicked
+        console.log("Clicked on circle:", node.data.data.type);
+        window.alert(
+          `Clicked on circle: ${node.data.data.type}, name: ${node.data.data.name}, value: ${node.data.data.value}`
+        );
+        // Example action: Redirect to a different page, display information about the circle, etc.
+      }
+    });
+  });
 }
 
 function createChildrenNodes(
   transform: d3.ZoomTransform,
   nodes: d3.HierarchyCircularNode<Datum>[],
-  context: CanvasRenderingContext2D | null | undefined
+  context: CanvasRenderingContext2D | null | undefined,
+  hoveredNode: d3.HierarchyCircularNode<Datum> | null
 ) {
   if (context) {
     // for children circles
@@ -287,7 +342,12 @@ function createChildrenNodes(
       const r = transform.k * node.r;
 
       // Set the shadow properties
-      context.shadowColor = "rgba(0, 0, 0, 0.5)"; // color of the shadow
+      if (hoveredNode && node === hoveredNode) {
+        context.shadowColor = "rgba(194, 221, 254, 0.8)";
+      } else {
+        context.shadowColor = "rgba(0, 0, 0, 0.5)";
+      }
+      // context.shadowColor = "rgba(0, 0, 0, 0.5)"; // color of the shadow
       context.shadowBlur = 10; // blur radius of the shadow
       context.shadowOffsetX = 0; // horizontal offset of the shadow
       context.shadowOffsetY = 0; // vertical offset of the shadow
@@ -388,3 +448,8 @@ function createParentNodes(
     }
   });
 }
+
+// Hover effect
+function hoverEffect(
+  canvas: d3.Selection<HTMLCanvasElement, unknown, HTMLElement, any>
+) {}
