@@ -11,7 +11,7 @@ interface Datum {
 }
 
 const MIN_ZOOM_LEVEL = 1;
-const MAX_ZOOM_LEVEL = 20;
+const MAX_ZOOM_LEVEL = 15;
 
 const sizes = [10, 20];
 const names = ["EC2", "EKS"];
@@ -202,19 +202,19 @@ function createCircularPacking(
   draw(d3.zoomIdentity);
 
   // Find the largest parent node
-  const largestParentNode = parentNodes.reduce((max, node) => {
-    return node.r > max.r ? node : max;
-  }, parentNodes[0]);
-  //   largest radius check
-  const largestRadius = largestParentNode?.r ? largestParentNode?.r : 1;
+  // const largestParentNode = parentNodes.reduce((max, node) => {
+  //   return node.r > max.r ? node : max;
+  // }, parentNodes[0]);
+  // //   largest radius check
+  // const largestRadius = largestParentNode?.r ? largestParentNode?.r : 1;
 
   // Zoom/Drag handler
   const zoom_function = d3
     .zoom()
     .scaleExtent([MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL])
     .translateExtent([
-      [-width + largestRadius + width, -height + height], // Minimum translation (top-left corner)
-      [width - largestRadius, height], // Maximum translation (bottom-right corner)
+      [0, 0], // Minimum translation (top-left corner)
+      [width, height], // Maximum translation (bottom-right corner)
     ])
     .on("zoom", (e) => {
       const transform = e.transform;
